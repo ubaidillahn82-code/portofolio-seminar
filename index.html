@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Portfolio PPL | Nurmansyah Ubaidillah, S.Pd.</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* --- TEMA DEFAULT (DARK MODE) --- */
+        :root {
+            --primary: #f30d0d;
+            --primary-glow: rgba(243, 13, 13, 0.4);
+            --glass: rgba(15, 23, 42, 0.8); 
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --bg-dark: #0f172a;
+            --box-bg: rgba(0, 0, 0, 0.25);
+            --bg-overlay: linear-gradient(rgba(15, 23, 42, 0.88), rgba(15, 23, 42, 0.93));
+        }
+
+        /* --- CONFIG MODE SIANG (LIGHT MODE) --- */
+        [data-theme="light"] {
+            --glass: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(15, 23, 42, 0.1);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --bg-dark: #f8fafc;
+            --box-bg: rgba(255, 255, 255, 0.7);
+            --bg-overlay: linear-gradient(rgba(248, 250, 252, 0.85), rgba(248, 250, 252, 0.92));
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            color: var(--text-main);
+            background: var(--bg-dark);
+            background-image: 
+                var(--bg-overlay),
+                url('foto-lapangan.jpg');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            line-height: 1.7;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* --- KELAS BANTUAN UNTUK LOGIKA TAB / HIDE --- */
+        .hidden { display: none !important; }
+        
+        .fade-in { 
+            animation: fadeIn 0.4s ease-in-out; 
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- MODERN NAVIGATION --- */
+        nav {
+            position: fixed; width: 92%; max-width: 1200px; 
+            left: 50%; transform: translateX(-50%);
+            top: 20px; display: flex; justify-content: space-between; align-items: center;
+            padding: 0 25px; background: var(--glass);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 100px; z-index: 1000;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            height: 65px;
+            transition: background 0.3s ease, border 0.3s ease;
+        }
+
+        .nav-logo { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+        .nav-right-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            height: 100%;
+        }
+
+        .nav-links { 
+            display: flex; 
+            align-items: center;
+            list-style: none;
+            height: 100%;
+        }
+        
+        .nav-links > li {
+            position: relative;
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        .nav-links a {
+            color: var(--text-muted); padding: 8px 16px; text-decoration: none;
+            font-size: 0.75rem; font-weight: 600; border-radius: 50px; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+        }
+
+        .nav-links > li > a:hover, .nav-links > li > a.active {
+            background: var(--primary); color: #ffffff;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        .panah {
+            font-size: 8px;
+            margin-left: 5px;
+            transition: transform 0.3s;
+            display: inline-block;
+        }
+
+        .theme-toggle-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.05);
+        }
+
+        /* Tombol PDF di Navigasi */
+        .nav-pdf-btn {
+            background: rgba(243, 13, 13, 0.15);
+            border: 1px solid var(--primary);
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .nav-pdf-btn:hover {
+            background: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 4px 15px var(--primary-glow);
+            transform: translateY(-1px);
+        }
+        .nav-pdf-btn svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        /* Tombol Melayang (Floating Action Button) Ekspor PDF */
+        .fab-pdf {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 50px;
+            padding: 13px 22px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px var(--primary-glow);
+            z-index: 999;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .fab-pdf:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(243, 13, 13, 0.6);
+        }
+        .fab-pdf svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Tombol Aksi di Beranda */
+        .hero-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .btn-hero-pdf {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 0 8px 20px var(--primary-glow);
+            transition: all 0.3s ease;
+        }
+        .btn-hero-pdf:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(243, 13, 13, 0.55);
+        }
+
+        .sub-menu {
+            list-style: none;
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%) translateY(15px);
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            min-width: 200px;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            padding: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sub-menu li { width: 100%; margin: 4px 0; }
+        .sub-menu li a {
+            display: block; width: 100%; color: var(--text-muted);
+            padding: 10px 15px; border-radius: 8px; text-align: left; font-size: 0.75rem;
+        }
+        .sub-menu li a:hover { background: rgba(255, 255, 255, 0.08); color: var(--text-main); }
+
+        .nav-links li:hover .sub-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+
+        .menu-toggle { display: none; cursor: pointer; }
+
+        /* Layout */
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        
+        .card {
+            background: var(--glass); backdrop-filter: blur(15px);
+            padding: 40px; border-radius: 32px; border: 1px solid var(--glass-border);
+            margin-bottom: 30px; transition: transform 0.4s ease, border-color 0.4s ease, background 0.3s;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        .card:hover { border-color: var(--primary); }
+
+        /* Hero */
+        .hero { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 20px; }
+        .profile-img { width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--primary); margin-bottom: 25px; object-fit: cover; box-shadow: 0 0 20px var(--primary-glow); }
+        
+        h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .tagline { color: var(--primary); font-weight: 600; margin-bottom: 15px; letter-spacing: 1px; }
+
+        /* Sections */
+        section { padding-top: 120px; }
+        h2 { font-size: 1.5rem; margin-bottom: 25px; display: flex; align-items: center; gap: 12px; }
+        h2 i { color: var(--primary); }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        
+        .box { 
+            background: var(--box-bg); padding: 28px; border-radius: 24px; 
+            border: 1px solid var(--glass-border); transition: 0.3s;
+            margin-bottom: 20px;
+        }
+        .box:hover { background: rgba(255,255,255,0.05); transform: translateY(-3px); }
+
+        .box p {
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        .btn-link {
+            display: flex; align-items: center; gap: 10px; justify-content: center;
+            padding: 12px; background: var(--primary); color: #fff;
+            text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 0.85rem;
+            margin-top: 20px; transition: 0.3s;
+        }
+        .btn-link:hover { opacity: 0.9; transform: scale(1.02); }
+
+        /* Timeline */
+        .timeline { border-left: 2px solid var(--glass-border); margin-left: 15px; padding-left: 35px; }
+        .timeline-item { position: relative; margin-bottom: 40px; }
+        .timeline-item::before {
+            content: ""; position: absolute; left: -44px; top: 5px;
+            width: 16px; height: 16px; background: var(--primary);
+            border-radius: 50%; box-shadow: 0 0 15px var(--primary);
+        }
+
+        /* Styling Tabel Modern */
+        .tabel-modern {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            border-radius: 12px;
+            overflow: hidden;
+            font-size: 0.85rem;
+        }
+        .tabel-modern th, .tabel-modern td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .tabel-modern th {
+            background: rgba(243, 13, 13, 0.2);
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        /* Footer/Contact */
+        .footer-grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 25px; }
+        .contact-btn { padding: 12px 25px; border-radius: 100px; text-decoration: none; font-weight: 700; transition: 0.3s; }
+        .contact-btn:hover { transform: scale(1.05); box-shadow: 0 5px 15px var(--primary-glow); }
+
+        /* --- STYLING KHUSUS CETAK / EKSPOR PDF (PRINT-TO-PDF) --- */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 15mm;
+            }
+            body {
+                background: #ffffff !important;
+                color: #0f172a !important;
+                background-image: none !important;
+                font-size: 11pt;
+                line-height: 1.5;
+            }
+            nav, .theme-toggle-btn, .nav-pdf-btn, .fab-pdf, .hero-actions, .menu-toggle, iframe {
+                display: none !important;
+            }
+            .container, .container section, #main-footer {
+                display: block !important;
+                visibility: visible !important;
+                padding-top: 15px !important;
+            }
+            .hero {
+                height: auto !important;
+                padding: 40px 20px !important;
+                border-bottom: 2px solid #f30d0d;
+                margin-bottom: 25px;
+                page-break-after: always;
+            }
+            .card {
+                background: #ffffff !important;
+                border: 1px solid #cbd5e1 !important;
+                border-radius: 12px !important;
+                box-shadow: none !important;
+                padding: 20px !important;
+                margin-bottom: 20px !important;
+                color: #0f172a !important;
+            }
+            .box {
+                background: #f8fafc !important;
+                border: 1px solid #e2e8f0 !important;
+                border-radius: 10px !important;
+                padding: 16px !important;
+                margin-bottom: 14px !important;
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+            h1, h2, h4, b {
+                color: #0f172a !important;
+                text-shadow: none !important;
+            }
+            h3, .tagline {
+                color: #d90404 !important;
+            }
+            p, li {
+                color: #1e293b !important;
+            }
+            #lk2-refleksi, #lk2-refleksi-sem2, #lk3-refleksi {
+                page-break-before: always;
+            }
+        }
+
+        /* --- RESPONSIVE CSS --- */
+        @media (max-width: 992px) {
+            nav { width: 95%; top: 15px; padding: 0 20px; border-radius: 20px; }
+            .menu-toggle { display: block; }
+            .menu-toggle .bar {
+                display: block; width: 22px; height: 2px; margin: 5px auto;
+                background-color: var(--text-main); transition: 0.3s ease;
+            }
+
+            .nav-links { 
+                position: absolute; top: 75px; left: -110%;
+                flex-direction: column; width: 100%; max-width: 100%;
+                height: calc(100vh - 90px); background: var(--bg-dark);
+                border: 1px solid var(--glass-border); border-radius: 20px;
+                padding: 20px; align-items: flex-start; justify-content: flex-start;
+                transition: 0.4s ease; overflow-y: auto;
+            }
+            
+            .nav-links.aktif { left: 0; }
+            .nav-links > li { width: 100%; display: block; height: auto; margin-bottom: 10px; }
+            .nav-links a { display: flex; justify-content: space-between; width: 100%; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+            .sub-menu {
+                position: relative; top: 0; left: 0; transform: none;
+                width: 100%; background: rgba(255,255,255,0.02);
+                max-height: 0; overflow: hidden; opacity: 1; visibility: visible;
+                padding: 0; border: none; transition: max-height 0.3s ease-out;
+            }
+
+            .sub-menu.buka { max-height: 300px; padding: 5px 0; }
+            .sub-menu li a { padding-left: 35px; border-bottom: none; }
+
+            .menu-toggle.is-active .bar:nth-child(2) { opacity: 0; }
+            .menu-toggle.is-active .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+            .menu-toggle.is-active .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+            
+            section { padding-top: 100px; }
+            body { background-attachment: scroll; }
+            .nav-pdf-btn span { display: none; }
+            .nav-pdf-btn { padding: 8px; border-radius: 50%; }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .card { padding: 25px; }
+            .box p { text-align: left; }
+            .fab-pdf { bottom: 20px; right: 20px; padding: 11px 18px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-logo">
+        <img src="PGRI-removebg-preview.png" alt="Logo PGRI" style="width: 35px; height: auto;">
+        <img src="OIP-removebg-preview.jpg" alt="Logo PPG" style="width: 60px; height: auto;">
+        <span style="font-weight: 800; color: var(--primary); font-size: 1rem; letter-spacing: 0.5px;">E-PORTOFOLIO</span>
+    </div>
+
+    <div class="nav-right-container">
+        <ul class="nav-links" id="nav-links">
+            <li><a href="#beranda" class="active">Beranda</a></li>
+            
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle">Profil & Lokasi <span class="panah">▼</span></a>
+                <ul class="sub-menu">
+                    <li><a href="#profil">Profil Mahasiswa</a></li>
+                    <li><a href="#pendamping">DPL</a></li>
+                    <li><a href="#lokasi">LPTK</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle">Refleksi <span class="panah">▼</span></a>
+                <ul class="sub-menu">
+                    <li><a href="#lk2-refleksi">LK 2 Refleksi Sem 1</a></li>
+                    <li><a href="#lk2-refleksi-sem2">LK 2 Refleksi Sem 2</a></li>
+                    <li><a href="#lk3-refleksi">LK 3 Refleksi PPG</a></li>
+                </ul>
+            </li>
+        </ul>
+
+        <!-- Tombol Ekspor PDF di Navigasi Atas -->
+        <button class="nav-pdf-btn" onclick="exportPortfolioToPDF()" title="Cetak / Simpan Seluruh Portofolio ke PDF">
+            <i data-lucide="printer"></i>
+            <span>Ekspor PDF</span>
+        </button>
+
+        <!-- Tombol Pengubah Tema -->
+        <button class="theme-toggle-btn" id="theme-toggle" title="Ubah Mode Tampilan">
+            <i data-lucide="sun" id="theme-icon"></i>
+        </button>
+
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </div>
+</nav>
+
+<!-- Tombol Melayang (Floating Button) Ekspor ke PDF di Pojok Kanan Bawah -->
+<button class="fab-pdf" onclick="exportPortfolioToPDF()" title="Unduh Dokumen E-Portfolio dalam format PDF">
+    <i data-lucide="file-down"></i>
+    <span>Unduh PDF</span>
+</button>
+
+<!-- Beranda Section -->
+<section class="hero" id="beranda">
+    <img src="Profil.jpeg" class="profile-img" alt="Nurmansyah Ubaidillah">
+    <h1>Nurmansyah Ubaidillah, S.Pd.</h1>
+    <p class="tagline">PPG PRAJABATAN 2026</p>
+    <p style="color: var(--text-muted); max-width: 700px;">"Menjadi pendidik PJOK yang reflektif, adaptif, dan berpihak pada murid dengan memadukan pendekatan pedagogi modern serta inovasi teknologi demi mewujudkan generasi Indonesia yang bugar, cerdas, dan berkarakter Pancasila."</p>
+    
+    <div class="hero-actions">
+        <button class="btn-hero-pdf" onclick="exportPortfolioToPDF()">
+            <i data-lucide="download"></i> Ekspor Dokumen Portofolio ke PDF
+        </button>
+    </div>
+</section>
+
+<!-- Container disembunyikan secara default melalui JavaScript -->
+<div class="container hidden">
+    
+    <section id="profil">
+        <div class="card">
+            <h2><i data-lucide="user"></i> Profil Mahasiswa</h2>
+            <div style="display: flex; gap: 30px; flex-wrap: wrap; align-items: center;">
+                <img src="Image profil.png" style="width: 180px; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.4);" alt="Foto Profil">
+                <div style="flex: 1; min-width: 300px;">
+                    <p style="margin-bottom: 15px; text-align: justify;">Saya adalah mahasiswa Program Pendidikan Profesi Guru (PPG) Prajabatan di Universitas PGRI Adi Buana Surabaya dengan spesialisasi pada bidang studi Pendidikan Jasmani, Olahraga, dan Kesehatan (PJOK). Berbekal latar belakang pendidikan Sarjana Pendidikan Jasmani dan panggilan jiwa sebagai pendidik, saya membawa misi untuk mentransformasi paradigma pembelajaran olahraga di sekolah agar lebih inklusif, bermakna, dan relevan dengan perkembangan zaman.</p>
+                    <p style="margin-bottom: 15px; text-align: justify;">Melalui rangkaian perkuliahan mendalam dan Praktik Pengalaman Lapangan (PPL) di SMAN 15 Surabaya, saya berfokus pada perancangan ekosistem belajar yang berpusat pada peserta didik (<i>student-centered learning</i>) menggunakan kerangka <i>Understanding by Design</i> (UbD), pembelajaran berdiferensiasi, pendekatan tanggap budaya (<i>Culturally Responsive Teaching</i>), dan integrasi Kompetensi Sosial Emosional (PSE). Selain di lapangan, saya juga aktif mengembangkan media pembelajaran interaktif berbasis web (seperti aplikasi pembelajaran bola voli dan E-LKPD digital terintegrasi) untuk menjembatani literasi konsep taktis dan praktik gerak motorik siswa. Saya meyakini bahwa PJOK bukan sekadar aktivitas mengolah raga di bawah terik matahari, melainkan wahana strategis untuk menumbuhkan pola pikir bertumbuh (<i>growth mindset</i>), sportivitas, kolaborasi, dan kebugaran sepanjang hayat.</p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem;">
+                        <div class="box" style="margin-bottom: 0;"><b>LPTK:</b><br>Universitas PGRI Adi Buana Surabaya</div>
+                        <div class="box" style="margin-bottom: 0;"><b>Bidang Studi & Sekolah Mitra:</b><br>PJOK — SMAN 15 Surabaya</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pendamping">
+        <div class="grid">
+            <div class="card">
+                <h2><i data-lucide="book-open"></i> DPL 1</h2>
+                <p><b>Dr. Suharti, S.Pd., M.Pd</b></p>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 5px;">Dosen Pembimbing Lapangan — Universitas PGRI Adi Buana Surabaya</p>
+            </div>
+            <div class="card">
+                <h2><i data-lucide="book-open"></i> DPL 2</h2>
+                <p><b>Gatot Margisal Utomo, M.Pd</b></p>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 5px;">Dosen Pembimbing Lapangan — Universitas PGRI Adi Buana Surabaya</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="lokasi">
+        <div class="card">
+            <h2><i data-lucide="map-pin"></i> LPTK</h2>
+            <p style="margin-bottom: 20px;">Universitas PGRI Adi Buana Surabaya. Jl. Dukuh Menanggal XII, Dukuh Menanggal, Kec. Gayungan, Surabaya, Jawa Timur 60234.</p>
+            <div style="border-radius: 20px; overflow: hidden; border: 1px solid var(--glass-border);">
+                <iframe 
+                    width="100%" 
+                    height="450" 
+                    style="border:0;" 
+                    loading="lazy" 
+                    allowfullscreen
+                    src="https://maps.google.com/maps?q=-7.344383302911096, 112.72265881049084&hl=id&z=15&output=embed">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- SECTION LK 2: REFLEKSI PENGALAMAN BELAJAR SEMESTER 1 -->
+    <section id="lk2-refleksi">
+        <div class="card">
+            <h2><i data-lucide="book-open-check"></i> LEMBAR KERJA 2 (LK 2): REFLEKSI PENGALAMAN BELAJAR SEMESTER 1</h2>
+            <p style="color: var(--text-muted); margin-bottom: 25px;">
+                Dokumen refleksi komprehensif atas 8 mata kuliah Semester 1 PPG Prajabatan PJOK di Universitas PGRI Adi Buana Surabaya. Refleksi ini disusun mengacu pada kerangka berpikir 4C (<i>Connection, Challenge, Concept, Change</i>), Analisis Artefak Pembelajaran, serta Kaitan Praktisnya dengan implementasi nyata di lapangan.
+            </p>
+
+            <!-- MATA KULIAH 1 -->
+            <div class="box">
+                <h3 style="color: var(--primary); margin-bottom: 12px; font-size: 1.15rem;">1. Filosofi Pendidikan Indonesia</h3>
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 10px; margin-bottom: 6px;">A. Refleksi 4C</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Connection:</b> Pemikiran Ki Hajar Dewantara (KHD) mengenai filosofi "Sistem Among" dan hakikat "Pendidikan yang Menuntun" memiliki keterkaitan fundamental dengan peran saya sebagai calon pendidik PJOK. Sebelum mendalami mata kuliah ini, saya sering memandang pembelajaran olahraga sebatas proses transfer keterampilan motorik dan pencapaian target kebugaran fisik semata. Namun, filosofi KHD menyadarkan saya bahwa pendidikan jasmani adalah medium strategis untuk menuntun segala kekuatan kodrat yang ada pada anak—baik kodrat alam (karakteristik biologis, bakat motorik, dan latar belakang sosial budaya siswa) maupun kodrat zaman (kecakapan abad ke-21 dan pemanfaatan teknologi pembelajaran olahraga)—agar mereka dapat mencapai keselamatan dan kebahagiaan yang setinggi-tingginya sebagai manusia maupun anggota masyarakat.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Challenge:</b> Tantangan terbesar yang saya hadapi adalah mendekonstruksi paradigma lama bahwa pembelajaran PJOK harus selalu bersifat instruksional, komando, dan berpusat pada ketegasan guru (<i>teacher-centered</i>). Di lapangan, seringkali terdapat asumsi bahwa keberhasilan pembelajaran olahraga diukur dari seberapa seragam dan patuhnya siswa terhadap aba-aba peluit. Mengubah orientasi dari sekadar "menuntut ketepatan teknik cabang olahraga" menjadi "menuntun potensi unik, antusiasme, dan kebugaran setiap murid secara merdeka" membutuhkan pergeseran pola pikir serta kesabaran ekstra dalam mengelola dinamika kelas di ruang terbuka.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Concept:</b> Konsep esensial yang menjadi fondasi baru saya meliputi trilogi kepemimpinan Ki Hajar Dewantara (<i>Ing Ngarso Sung Tulodho, Ing Madyo Mangun Karso, Tut Wuri Handayani</i>), prinsip pendidikan yang memerdekakan dan berpihak pada anak, keselarasan Kodrat Alam dan Kodrat Zaman, pembentukan budi pekerti (keselarasan cipta, rasa, karsa, dan raga), serta internalisasi dimensi Profil Pelajar Pancasila dalam aktivitas jasmani.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Change:</b> Perubahan nyata yang saya terapkan adalah mentransformasi gaya mengajar saya menjadi lebih humanis, dialogis, dan inklusif. Saya tidak lagi memaksakan satu standar capaian performa atletik kepada seluruh siswa, melainkan merancang iklim pembelajaran PJOK yang memerdekakan, di mana setiap siswa merasa aman, dihargai progresnya, dan bebas bereksplorasi tanpa rasa takut dihakimi atas keterbatasan fisiknya.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">B. Analisis Artefak Pembelajaran</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Artefak:</b> Infografis Kontekstualisasi Pemikiran Ki Hajar Dewantara & Jurnal Refleksi Kritis Pendidikan yang Memerdekakan dalam PJOK.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Alasan Pemilihan:</b> Artefak ini merupakan manifesto filosofis sekaligus kompas etis bagi saya. Dokumen ini merekam proses transformasi cara pandang saya dari seorang instruktur fisik menjadi pendidik yang memosisikan murid sebagai subjek utuh dalam setiap perencanaan modul ajar.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">C. Kaitan Praktis</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Secara praktis, konsep ini saya wujudkan langsung di lapangan olahraga SMAN 15 Surabaya dengan menerapkan Sistem Among: memberi teladan gerakan dan disiplin di awal (<i>Ing Ngarso Sung Tulodho</i>), membaur dan memotivasi siswa saat mereka berlatih dalam kelompok (<i>Ing Madyo Mangun Karso</i>), serta memberikan kepercayaan penuh kepada siswa untuk memimpin pemanasan, menyusun strategi tim, dan mengevaluasi permainan secara mandiri (<i>Tut Wuri Handayani</i>).</p>
+            </div>
+
+            <!-- MATA KULIAH 2 -->
+            <div class="box">
+                <h3 style="color: var(--primary); margin-bottom: 12px; font-size: 1.15rem;">2. Pemahaman tentang Peserta Didik dan Pembelajarannya (PPDP)</h3>
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 10px; margin-bottom: 6px;">A. Refleksi 4C</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Connection:</b> Materi mengenai teori perkembangan kognitif, psikomotorik, fisiologis, serta sosio-emosional peserta didik sangat relevan ketika saya diterjunkan untuk memetakan heterogenitas siswa kelas XI di SMAN 15 Surabaya. Saya menyadari bahwa efektivitas instruksi gerak di lapangan sangat bergantung pada seberapa akurat guru memahami profil awal muridnya, mulai dari tingkat kebugaran kardiorespirasi, koordinasi motorik, hingga latar belakang minat mereka terhadap aktivitas olahraga.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Challenge:</b> Tantangan utama yang muncul di lapangan adalah menjembatani kesenjangan (<i>gap</i>) kemampuan yang sangat lebar di dalam satu kelas yang sama. Di satu sisi, terdapat siswa yang aktif mengikuti klub olahraga atau ekstrakurikuler sehingga cepat menguasai teknik, namun di sisi lain terdapat siswa dengan gaya hidup sedenter (kurang gerak), memiliki indeks massa tubuh berlebih, atau menyimpan trauma psikologis akibat pernah gagal atau cedera saat berolahraga di jenjang sebelumnya.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Concept:</b> Konsep kunci yang saya kuasai dari mata kuliah ini meliputi teori perkembangan kognitif dan konstruktivisme sosial (Piaget & Vygotsky), konsep <i>Zone of Proximal Development</i> (ZPD) beserta teknik pemberian bantuan bertahap (<i>scaffolding</i>), prinsip <i>Developmentally Appropriate Practice</i> (DAP) dalam pendidikan jasmani, serta penyusunan instrumen Asesmen Diagnostik Kognitif dan Non-Kognitif.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Change:</b> Kini saya pantang menyusun skenario pembelajaran sebelum memiliki data profil siswa. Saya membiasakan diri melakukan asesmen diagnostik awal—baik melalui kuesioner digital mengenai minat dan riwayat kesehatan maupun observasi motorik dasar—sehingga setiap aktivitas permainan yang saya rancang benar-benar selaras dengan tingkat kesiapan belajar (<i>readiness</i>) peserta didik.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">B. Analisis Artefak Pembelajaran</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Artefak:</b> Laporan Profiling Karakteristik Peserta Didik Kelas XI & Instrumen Pemetaan Asesmen Diagnostik Awal PJOK.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Alasan Pemilihan:</b> Artefak ini menyajikan bukti empiris bagaimana data kualitatif dan kuantitatif mengenai aspek fisiologis, gaya belajar (kinestetik, visual, auditori), serta dinamika sosial kelas diolah menjadi dasar pijakan ilmiah dalam menyusun Modul Ajar yang responsif.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">C. Kaitan Praktis</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Data dari pemetaan peserta didik ini saya gunakan untuk menerapkan strategi <i>peer-tutoring</i> (tutor sebaya) dalam batas ZPD siswa. Siswa dengan keterampilan motorik tingkat mahir dipasangkan secara kolaboratif untuk membimbing rekannya yang masih pada tahap pemula, sembari saya memberikan <i>scaffolding</i> koreksi postur tubuh secara bertahap agar pembelajaran berlangsung aman dan bebas risiko cedera.</p>
+            </div>
+
+            <!-- MATA KULIAH 3 -->
+            <div class="box">
+                <h3 style="color: var(--primary); margin-bottom: 12px; font-size: 1.15rem;">3. Pembelajaran Mendalam dan Asesmen Dasar PJOK</h3>
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 10px; margin-bottom: 6px;">A. Refleksi 4C</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Connection:</b> Materi tentang pembelajaran mendalam (<i>deep learning</i>) dan asesmen dasar PJOK ini sangat berkaitan erat dengan pengalaman merancang modul ajar dan memfasilitasi praktik di lapangan, khususnya melalui kerangka kerja <i>Understanding by Design</i> (UbD). Sebelumnya, penyusunan rencana pembelajaran seringkali dimulai dengan memikirkan "aktivitas fisik atau permainan apa yang akan dilakukan hari ini". Namun, pendekatan <i>backward design</i> (desain mundur) dalam UbD menyadarkan saya bahwa perencanaan yang efektif harus dibalik: dimulai dari menetapkan tujuan/capaian pembelajaran, lalu menentukan bukti penilaian (asesmen), dan terakhir baru merancang aktivitas pembelajaran. Pendekatan ini memastikan bahwa aktivitas fisik di lapangan tidak sekadar rutinitas gerak tanpa makna, melainkan bermuara pada pemahaman taktis dan mekanika tubuh yang mendalam.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Challenge:</b> Tantangan terbesar yang muncul dari materi ini adalah menerapkan tahap kedua dari kerangka UbD, yaitu menentukan <i>acceptable evidence</i> (bukti penilaian yang dapat diterima) di tengah dinamika kelas PJOK yang nyata. Merancang asesmen formatif yang mampu mengukur pemahaman mendalam untuk kelas dengan kapasitas besar (misalnya 30–36 siswa) membutuhkan instrumen observasi yang sangat presisi. Mengubah paradigma dari sekadar menilai "apakah siswa berhasil melakukan teknik" menjadi "apakah siswa mengerti kapan dan mengapa teknik tersebut digunakan dalam situasi permainan" dirasa cukup menantang. Menyusun rubrik yang holistik sebagai bukti pemahaman dalam UbD, namun tetap praktis digunakan di lapangan terbuka tanpa menyita waktu aktif bergerak siswa (<i>Academic Learning Time-Physical Education</i>), merupakan tantangan yang harus saya pecahkan.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Concept:</b> Konsep utama yang paling melekat dari mata kuliah ini adalah prinsip <i>Backward Design</i> dari UbD (Tujuan ➔ Asesmen ➔ Kegiatan Pembelajaran). Konsep ini sangat vital untuk menciptakan penyelarasan konstruktif (<i>constructive alignment</i>)—memastikan ada benang merah yang tak terputus antara apa yang ingin dicapai, bagaimana hal itu diukur, dan aktivitas apa yang dilakukan siswa. Konsep penting lainnya adalah pergeseran fokus menuju <i>Assessment as Learning</i> dan <i>Assessment for Learning</i>. Pembelajaran mendalam terjadi ketika bukti penilaian dalam UbD tidak hanya dipegang oleh guru sebagai evaluasi akhir (<i>Assessment of Learning</i>), tetapi juga digunakan oleh siswa untuk melakukan refleksi mandiri serta memberikan umpan balik kepada temannya (<i>peer assessment</i>).</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Change:</b> Perubahan langkah konkret yang saya lakukan adalah sepenuhnya menggunakan alur kerja UbD dalam merancang modul ajar dan matriks penilaian siswa. Saya membiasakan diri untuk tidak mendesain dril atau permainan fisik sebelum rubrik penilaian formatifnya selesai dibuat. Saya juga mengintegrasikan pertanyaan-pertanyaan pemantik (<i>essential questions</i>) di awal pembelajaran dan mendokumentasikan progres siswa melalui penilaian diagnostik, formatif, dan sumatif secara digital melalui E-LKPD.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">B. Analisis Artefak Pembelajaran</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Artefak:</b> Perangkat Modul Ajar PJOK Berbasis Kerangka <i>Understanding by Design</i> (UbD) & Instrumen Rubrik Penilaian Autentik (Kognitif, Psikomotor, Afektif).</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Alasan Pemilihan:</b> Artefak ini membuktikan adanya keselarasan konstruktif yang utuh antara Capaian Pembelajaran, Tujuan Pembelajaran (TP), Kriteria Ketercapaian Tujuan Pembelajaran (KKTP), instrumen asesmen, dan langkah kegiatan pembelajaran di lapangan.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">C. Kaitan Praktis</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Di lapangan, saya mengimplementasikan <i>Assessment for Learning</i> dengan memberikan umpan balik korektif secara langsung (<i>immediate feedback</i>) saat jeda permainan, serta memfasilitasi <i>peer-assessment</i> di mana siswa saling mengamati biomekanika gerakan temannya menggunakan lembar observasi terstruktur.</p>
+            </div>
+
+            <!-- MATA KULIAH 4 -->
+            <div class="box">
+                <h3 style="color: var(--primary); margin-bottom: 12px; font-size: 1.15rem;">4. Pola Pikir Bertumbuh (Growth Mindset) dalam Pembelajaran</h3>
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 10px; margin-bottom: 6px;">A. Refleksi 4C</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Connection:</b> Konsep pola pikir bertumbuh (<i>growth mindset</i>) sangat erat kaitannya dengan psikologi olahraga dan bagaimana siswa memandang kapasitas fisik mereka. Dalam pelajaran PJOK, kegagalan atau keberhasilan melakukan suatu teknik gerak terlihat secara langsung oleh seluruh teman sekelas di lapangan. Mata kuliah ini meyakinkan saya bahwa tidak ada siswa yang "tidak berbakat olahraga", melainkan mereka "belum" menemukan metode latihan dan ritme koordinasi yang tepat.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Challenge:</b> Mengubah keyakinan membatasi (<i>fixed mindset</i>) dan rasa rendah diri pada sebagian siswa di SMAN 15 Surabaya—terutama siswa yang sering berkata "saya memang tidak bisa olahraga, Pak" sebelum mencoba—serta menghilangkan budaya menertawakan teman yang melakukan kesalahan saat bermain.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Concept:</b> Teori <i>Fixed Mindset vs Growth Mindset</i> oleh Carol Dweck, konsep neuroplastisitas dan pembentukan memori otot (<i>muscle memory</i>) melalui latihan berulang, kekuatan kata "Belum" (<i>The Power of Yet</i>), serta teknik pemberian pujian berfokus pada proses dan usaha (<i>Process Praise</i>) alih-alih pujian berfokus pada bakat bawaan (<i>Person Praise</i>).</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Change:</b> Saya merombak cara saya berkomunikasi dan memberi apresiasi di lapangan. Saya tidak lagi hanya memuji siswa yang berhasil mencetak poin atau memenangkan pertandingan, melainkan secara eksplisit mengapresiasi kegigihan, perbaikan postur tubuh, keberanian mencoba kembali setelah gagal, dan sportivitas siswa. Saya juga menyelenggarakan kampanye afirmasi positif untuk membingkai kesalahan gerak sebagai informasi berharga menuju penguasaan teknik.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">B. Analisis Artefak Pembelajaran</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Artefak:</b> Rancangan Skenario Intervensi Kelas & Desain Poster Proyek Kampanye Afirmasi <i>Growth Mindset</i> dalam Pembelajaran PJOK (Pertemuan 15).</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Alasan Pemilihan:</b> Artefak ini merepresentasikan upaya sistematis dan visual dalam membangun budaya kelas yang positif, di mana rintangan fisik dipandang sebagai tantangan yang memacu pertumbuhan, bukan ancaman terhadap harga diri siswa.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">C. Kaitan Praktis</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Penerapan bahasa <i>growth mindset</i> dan <i>The Power of Yet</i> di lapangan terbukti menciptakan keamanan psikologis (<i>psychological safety</i>). Siswa yang awalnya pasif di pinggir lapangan menjadi jauh lebih berani mengambil bagian dalam dril bola voli, karena mereka tahu bahwa setiap usaha dan progres sekecil apa pun akan dihargai dalam rubrik penilaian proses.</p>
+            </div>
+
+            <!-- MATA KULIAH 5 -->
+            <div class="box">
+                <h3 style="color: var(--primary); margin-bottom: 12px; font-size: 1.15rem;">5. Perspektif Sosiokultural dalam Pendidikan Indonesia</h3>
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 10px; margin-bottom: 6px;">A. Refleksi 4C</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Connection:</b> Mata kuliah ini menyadarkan saya bahwa peserta didik tidak datang ke lapangan olahraga sebagai ruang hampa, melainkan membawa identitas sosial, budaya, ekonomi, dan politik (faktor SES/Status Sosial Ekonomi) yang membentuk cara mereka berinteraksi serta belajar. Dalam konteks SMAN 15 Surabaya yang multikultural, memahami latar belakang sosiokultural siswa sangat krusial agar pembelajaran PJOK mampu merangkul keberagaman budaya lokal sekaligus menjamin kesetaraan akses partisipasi tanpa bias gender maupun status sosial.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Challenge:</b> Tantangan utamanya adalah mengikis stereotip sosiokultural yang sering mengakar dalam pembelajaran olahraga di sekolah, seperti anggapan bahwa cabang olahraga permainan tertentu hanya cocok untuk siswa laki-laki sementara siswa perempuan cenderung pasif, atau adanya kesenjangan fasilitas perlengkapan olahraga pribadi akibat perbedaan latar belakang ekonomi keluarga siswa. Selain itu, merancang aktivitas fisik yang mampu mengintegrasikan unsur budaya lokal di tengah dominasi olahraga modern membutuhkan kreativitas pedagogis tersendiri.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Concept:</b> Konsep esensial yang saya pelajari meliputi Teori Sosiokultural Lev Vygotsky, interaksi sosial dalam <i>Zone of Proximal Development</i> (ZPD) dengan bantuan <i>More Knowledgeable Other</i> (MKO) dan <i>Scaffolding</i>, pendekatan <i>Culturally Responsive Teaching</i> (CRT) atau pengajaran yang tanggap budaya, konsep <i>Cultural Historical Activity Theory</i> (CHAT), serta keadilan sosial (<i>equity</i>) dalam pendidikan.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Change:</b> Saya mengubah pendekatan pembelajaran PJOK menjadi lebih inklusif dan responsif secara budaya (berbasis CRT). Saya mulai menyisipkan permainan tradisional Nusantara (seperti modifikasi <i>gobak sodor</i> atau <i>boy-boyan</i>) ke dalam sesi pemanasan untuk melatih kelincahan dan kerja sama tim, menggunakan istilah atau kearifan lokal Jawa Timur (seperti semangat <i>rek ayo rek</i> dan <i>gotong royong</i>) untuk membangun keakraban, serta membentuk kelompok heterogen lintas gender dan latar belakang di mana siswa yang lebih mahir berperan sebagai MKO yang membimbing temannya melalui <i>scaffolding</i> sebaya.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">B. Analisis Artefak Pembelajaran</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Artefak:</b> Modul Ajar PJOK Terintegrasi Pendekatan <i>Culturally Responsive Teaching</i> (CRT) & Studi Kasus Analisis Faktor Sosiokultural serta Penerapan <i>Scaffolding</i> dalam ZPD di SMAN 15 Surabaya.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Alasan Pemilihan:</b> Artefak ini membuktikan kemampuan saya dalam mengontekstualisasikan materi PJOK dengan identitas budaya peserta didik serta menerapkan strategi <i>scaffolding</i> berbasis interaksi sosial Vygotsky untuk meruntuhkan sekat-sekat perbedaan sosial di dalam kelas.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">C. Kaitan Praktis</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Melalui penerapan CRT dan ZPD di lapangan olahraga, suasana kelas menjadi jauh lebih egaliter, hangat, dan kolaboratif. Siswa merasa identitas budayanya dihargai lewat permainan pemanasan berbasis kearifan lokal, tidak ada lagi dominasi kelompok tertentu dalam pembagian lapangan, dan kolaborasi antarteman sebaya (MKO) mempercepat pemerataan penguasaan teknik dasar olahraga tanpa memandang latar belakang sosial ekonomi mereka.</p>
+            </div>
+
+            <!-- MATA KULIAH 6 -->
+            <div class="box">
+                <h3 style="color: var(--primary); margin-bottom: 12px; font-size: 1.15rem;">6. Praktik Pengalaman Lapangan I (PPL I)</h3>
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 10px; margin-bottom: 6px;">A. Refleksi 4C</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Connection:</b> PPL I di SMAN 15 Surabaya merupakan kawah candradimuka tempat seluruh teori pedagogik yang saya pelajari di kampus diuji validitasnya dalam realitas sekolah. Melalui tahapan observasi lingkungan sekolah, asistensi mengajar, hingga praktik mengajar terbimbing (<i>guided teaching</i>), saya merasakan langsung bagaimana teori manajemen kelas, filosofi KHD, dan desain modul ajar berinteraksi dengan dinamika kultur sekolah serta karakter nyata siswa SMA.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Challenge:</b> Menghadapi dinamika pengelolaan kelas di ruang terbuka (<i>outdoor classroom management</i>) yang penuh distraksi, mulai dari perubahan cuaca yang ekstrem, kebisingan dari kelas lain di sekitar lapangan, transisi siswa dari ruang kelas menuju lapangan yang sering memakan waktu, hingga menjaga fokus dan kedisiplinan puluhan remaja agar tetap berada dalam koridor keselamatan kerja (<i>safety first</i>).</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Concept:</b> Konsep penting yang saya pelajari mencakup tahapan Supervisi Klinis (Pra-observasi, Observasi, dan Pasca-observasi), teknik <i>Lesson Study</i> (<i>Plan, Do, See</i>), manajemen waktu belajar efektif dalam PJOK, siklus refleksi berkelanjutan (<i>Gibbs Reflective Cycle</i>), serta pengumpulan data awal untuk Penelitian Tindakan Kelas (PTK).</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Change:</b> Saya bertransformasi dari seorang mahasiswa calon guru yang awalnya masih terpaku pada teks modul ajar menjadi pendidik lapangan yang luwes, memiliki <i>withitness</i> (kepekaan mengawasi seluruh sudut lapangan), tegas namun hangat, serta menguasai manajemen sinyal perhatian (kombinasi peluit, gestur visual, dan formasi barisan efektif) sehingga instruksi tersampaikan dengan singkat dan jelas.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">B. Analisis Artefak Pembelajaran</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Artefak:</b> Jurnal Refleksi Harian PPL I, Lembar Hasil Observasi Praktik Mengajar Terbimbing Siklus 1–3, dan Dokumentasi Video Praktik Pembelajaran.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Alasan Pemilihan:</b> Kumpulan artefak ini merekam jejak progresif peningkatan kompetensi mengajar saya dari siklus ke siklus berkat umpan balik konstruktif dari Dosen Pembimbing Lapangan (DPL) dan Guru Pamong.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">C. Kaitan Praktis</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Membentuk kebiasaan profesional untuk selalu melakukan sesi <i>debriefing</i> dan evaluasi kritis bersama Guru Pamong maupun rekan sejawat seusai mengajar, sehingga setiap kekurangan manajemen waktu dan alat pada pertemuan hari ini langsung diperbaiki pada perencanaan pertemuan minggu berikutnya.</p>
+            </div>
+
+
+
+        </div>
+    </section>
+
+    <!-- SECTION LK 2: REFLEKSI PENGALAMAN BELAJAR SEMESTER 2 -->
+    <section id="lk2-refleksi-sem2">
+        <div class="card">
+            <h2><i data-lucide="book-open-check"></i> LEMBAR KERJA 2 (LK 2): REFLEKSI PENGALAMAN BELAJAR SEMESTER 2</h2>
+            
+            <p style="color: var(--text-muted); margin-bottom: 25px;">
+                Dokumen ini merupakan hasil refleksi mendalam atas 6 mata kuliah inti yang ditempuh pada Semester 2. Analisis diuraikan secara komprehensif melalui kerangka 4C, identifikasi artefak pendukung unggulan, serta kaitan praktisnya dengan tugas kemandirian dan kepemimpinan sebagai pendidik PJOK profesional.
+            </p>
+
+            <!-- MATA KULIAH 1: Pembelajaran Sosial Emosional -->
+            <div class="box">
+                <h3 style="color: var(--primary); margin-bottom: 12px; font-size: 1.15rem;">1. Pembelajaran Sosial Emosional (PSE)</h3>
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 10px; margin-bottom: 6px;">A. Refleksi 4C</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Connection:</b> Pembelajaran PJOK adalah laboratorium sosial-emosional yang paling nyata di sekolah. Dalam situasi permainan kompetitif di lapangan, emosi siswa—mulai dari euforia kemenangan, frustrasi akibat kekalahan, kecemasan saat melakukan servis, hingga gesekan antaranggota tim—muncul secara spontan dan intens. Mata kuliah PSE memberikan landasan ilmiah bagi saya untuk mengelola dinamika psikologis tersebut agar olahraga benar-benar menjadi sarana pembentukan kematangan emosi dan karakter sosial siswa.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Challenge:</b> Tantangan utamanya adalah melatih regulasi diri (<i>self-management</i>) dan empati siswa di tengah tensi permainan yang tinggi. Seringkali siswa yang terlalu berambisi menang menunjukkan reaksi menyalahkan rekan satu tim yang melakukan kesalahan teknik (<i>blaming</i>), sementara siswa yang kurang percaya diri mengalami blokade mental (<i>choking under pressure</i>) saat diamati banyak orang.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Concept:</b> Kerangka kerja 5 Kompetensi Sosial Emosional CASEL (<i>Self-Awareness</i>/Kesadaran Diri, <i>Self-Management</i>/Manajemen Diri, <i>Social Awareness</i>/Kesadaran Sosial, <i>Relationship Skills</i>/Keterampilan Berelasi, dan <i>Responsible Decision Making</i>/Pengambilan Keputusan yang Bertanggung Jawab), teknik kesadaran penuh (<i>Mindfulness</i>) dengan metode STOP (<i>Stop, Take a deep breath, Observe, Proceed</i>), serta konsep <i>Empathy</i> dan <i>Compassion</i> dalam dinamika kelompok.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Change:</b> Saya secara intensional mengintegrasikan kelima kompetensi CASEL ke dalam tahapan modul ajar PJOK. Saya menambahkan sesi latihan pernapasan berkesadaran penuh (<i>mindfulness breathing</i>) pada saat pendinginan (<i>cooling down</i>), menerapkan roda pemeriksaan emosi di awal pelajaran, serta menetapkan aturan komunikasi suportif di dalam tim sebelum pertandingan dimulai.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">B. Analisis Artefak Pembelajaran</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Artefak:</b> Modul Ajar PJOK Terintegrasi Kompetensi Sosial Emosional (KSE), Jurnal Refleksi Empati, dan Poster Kampanye Regulasi Emosi & <i>Growth Mindset</i>.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Alasan Pemilihan:</b> Artefak ini mendemonstrasikan bagaimana indikator KSE tidak diajarkan sebagai teori terpisah, melainkan dilebur secara eksplisit ke dalam instruksi pemanasan, kerja sama tim, dan sesi refleksi akhir di lapangan.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">C. Kaitan Praktis</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Praktik teknik STOP saat jeda <i>time-out</i> permainan dan sesi refleksi lingkaran (<i>circle time</i>) pada akhir jam pelajaran membantu siswa menurunkan ketegangan detak jantung sekaligus emosi mereka. Siswa menjadi terbiasa saling memberikan apresiasi, meminta maaf secara sportif, dan mengevaluasi taktik tim dengan kepala dingin.</p>
+            </div>
+
+            <!-- MATA KULIAH 2: Pembelajaran Mendalam dan Asesmen Lanjut -->
+            <div class="box">
+                <h3 style="color: var(--primary); margin-bottom: 12px; font-size: 1.15rem;">2. Pembelajaran Mendalam dan Asesmen Lanjut</h3>
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 10px; margin-bottom: 6px;">A. Refleksi 4C</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Connection:</b> Sebagai kelanjutan dari semester pertama, mata kuliah ini memperdalam kecakapan saya dalam merancang evaluasi autentik dan melacak progres penguasaan keterampilan siswa secara longitudinal (berkelanjutan). Dalam konteks SMA, asesmen PJOK tingkat lanjut menuntut integrasi antara keterampilan gerak spesifik dengan kemampuan berpikir tingkat tinggi (HOTS), seperti menganalisis kelemahan pertahanan lawan dan merancang strategi permainan.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Challenge:</b> Menyusun matriks rubrik penilaian kinerja (<i>performance assessment</i>) yang mampu membedakan gradasi kualitas gerak dan pengambilan keputusan taktis siswa secara objektif, adil, dan bebas bias subjektivitas guru, sembari mengolah data nilai tersebut secara cepat agar hasilnya dapat segera ditindaklanjuti.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Concept:</b> Penyusunan Rubrik Analitik dan Holistik untuk Asesmen Kinerja (<i>Authentic Performance Assessment</i>), instrumen <i>Game Performance Assessment Instrument</i> (GPAI) untuk menilai eksekusi teknik sekaligus keputusan taktis dalam permainan, pengolahan data asesmen sebagai dasar tindak lanjut pedagogis, serta digitalisasi rekapitulasi penilaian.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Change:</b> Saya beralih dari penilaian tradisional yang hanya menghitung kuantitas (misalnya "berapa kali bola masuk dari 10 percobaan") menuju penilaian autentik berbasis matriks kinerja dan portofolio perkembangan siswa. Saya juga mengintegrasikan sistem E-LKPD berbasis <i>Google Apps Script</i> dan <i>Google Sheets</i> untuk mengotomatisasi pengolahan skor formatif dan umpan balik siswa.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">B. Analisis Artefak Pembelajaran</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Artefak:</b> Instrumen Matriks Asesmen Kinerja Siswa SMA (Rubrik Analitik Psikomotor, Kognitif Taktis, dan Afektif) beserta Sistem Rekapitulasi E-LKPD Terintegrasi.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Alasan Pemilihan:</b> Artefak ini menjadi bukti nyata transformasi sistem penilaian menuju evaluasi yang transparan, terukur secara ilmiah, dan berkeadilan sesuai dengan capaian fase belajar masing-masing peserta didik.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">C. Kaitan Praktis</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Data dari matriks asesmen kinerja ini saya manfaatkan secara langsung untuk memetakan ulang pengelompokan siswa (<i>re-grouping tier</i>) pada pertemuan berikutnya, menentukan siswa yang membutuhkan program remedial gerak spesifik, serta memberikan pengayaan taktis bagi kelompok siswa yang telah melampaui KKTP.</p>
+            </div>
+
+            <!-- MATA KULIAH 3: Perancangan dan Pengembangan Kurikulum -->
+            <div class="box">
+                <h3 style="color: var(--primary); margin-bottom: 12px; font-size: 1.15rem;">3. Perancangan dan Pengembangan Kurikulum</h3>
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 10px; margin-bottom: 6px;">A. Refleksi 4C</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Connection:</b> Mata kuliah ini memberikan perspektif makro sekaligus mikro tentang bagaimana suatu kurikulum dirancang, dikembangkan, dan diterjemahkan ke dalam perangkat pembelajaran di satuan pendidikan. Pemahaman mendalam terhadap arsitektur Kurikulum Merdeka dan kerangka kerja <i>Understanding by Design</i> (UbD) membantu saya melihat posisi strategis mata pelajaran PJOK dalam mendukung visi besar sekolah dan tujuan pendidikan nasional.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Challenge:</b> Tantangan utamanya adalah membedah dokumen Capaian Pembelajaran (CP) pemerintah yang bersifat umum pada Fase F (Kelas XI–XII SMA), kemudian menurunkannya menjadi Tujuan Pembelajaran (TP) dan Alur Tujuan Pembelajaran (ATP) yang logis, kontekstual dengan ketersediaan fasilitas di SMAN 15 Surabaya, serta tetap menjamin tercapainya 6 faset pemahaman (<i>Six Facets of Understanding</i>).</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Concept:</b> Tiga tahapan utama desain mundur UbD (<i>Identify Desired Results, Determine Acceptable Evidence, Plan Learning Experiences and Instruction</i>), Enam Faset Pemahaman (Menjelaskan, Menafsirkan, Menerapkan, Memiliki Perspektif, Berempati, dan Memiliki Pengetahuan Diri), prinsip organisasi kegiatan pembelajaran <b>WHERETO</b>, serta analisis Kurikulum Operasional Satuan Pendidikan (KOSP).</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Change:</b> Dalam merancang perangkat kurikulum, saya tidak lagi sekadar menyalin silabus lama. Saya menggunakan prinsip WHERETO untuk memastikan siswa mengetahui arah tujuan belajar dari awal (<i>Where & Why</i>), tertarik secara emosional (<i>Hook</i>), dibekali pengalaman gerak yang memadai (<i>Equip & Experience</i>), diberi ruang berefleksi dan merevisi gerakan (<i>Rethink & Revise</i>), dievaluasi secara transparan (<i>Evaluate</i>), serta disesuaikan dengan kebutuhan unik mereka (<i>Tailored</i>).</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">B. Analisis Artefak Pembelajaran</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Artefak:</b> Dokumen Analisis Capaian Pembelajaran (CP-TP-ATP) & Perangkat Modul Ajar Komprehensif Berbasis Kerangka <i>Understanding by Design</i> (UbD) dan Prinsip WHERETO.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Alasan Pemilihan:</b> Dokumen ini merupakan cetak biru (<i>blueprint</i>) kurikulum tingkat kelas yang menunjukkan koherensi utuh antara standar kurikulum nasional, bukti asesmen autentik, dan pengalaman belajar aktif di lapangan.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">C. Kaitan Praktis</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Penguasaan perancangan kurikulum ini menjadi modal berharga bagi saya saat terlibat dalam tim pengembang kurikulum sekolah maupun MGMP PJOK untuk menyusun program tahunan, program semester, modul projek penguatan profil pelajar Pancasila (P5), hingga kurikulum ekstrakurikuler olahraga yang adaptif.</p>
+            </div>
+
+            <!-- MATA KULIAH 4: Praktik Pengalaman Lapangan Mandiri (PPL II) -->
+            <div class="box">
+                <h3 style="color: var(--primary); margin-bottom: 12px; font-size: 1.15rem;">4. Praktik Pengalaman Lapangan Mandiri (PPL II)</h3>
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 10px; margin-bottom: 6px;">A. Refleksi 4C</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Connection:</b> PPL II merupakan puncak aktualisasi kompetensi pedagogik, profesional, sosial, dan kepribadian secara mandiri di SMAN 15 Surabaya. Pada fase ini, saya memikul tanggung jawab penuh dalam merancang, mengeksekusi, mengevaluasi beberapa siklus pembelajaran mandiri, sekaligus mengidentifikasi permasalahan pembelajaran nyata di kelas untuk dipecahkan secara ilmiah melalui Penelitian Tindakan Kelas (PTK) kolaboratif.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Challenge:</b> Selain harus mempertahankan konsistensi manajemen kelas secara mandiri, saya menemukan permasalahan krusial pada observasi awal di kelas XI, yaitu masih rendahnya tingkat penguasaan teknik dasar dan hasil belajar <i>passing</i> atas bola voli pada sebagian besar peserta didik akibat kurangnya variasi media pembelajaran dan kecemasan motorik siswa.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Concept:</b> Praktik Mengajar Mandiri (<i>Independent Teaching</i>), Metodologi Penelitian Tindakan Kelas (PTK) model Kemmis & McTaggart yang mencakup siklus Perencanaan (<i>Planning</i>), Pelaksanaan Tindakan (<i>Acting</i>), Pengamatan (<i>Observing</i>), dan Refleksi (<i>Reflecting</i>), inovasi media pembelajaran teknologi (TPACK), serta keterlibatan dalam kegiatan non-mengajar dan kultur sekolah.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Change:</b> Saya mengambil peran sebagai guru sekaligus peneliti di kelas saya sendiri (<i>teacher as researcher</i>). Untuk mengatasi masalah rendahnya hasil belajar <i>passing</i> atas bola voli, saya merancang intervensi siklus PTK yang memadukan modifikasi permainan berdiferensiasi dengan media pembelajaran web interaktif, lalu mengukur peningkatan ketuntasan klasikal siswa secara sistematis dari Siklus I ke Siklus II.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">B. Analisis Artefak Pembelajaran</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Artefak:</b> Laporan Lengkap Penelitian Tindakan Kelas (PTK) Kolaboratif berjudul <i>"Upaya Meningkatkan Hasil Belajar Passing Atas Bola Voli pada Siswa Kelas XI SMAN 15 Surabaya"</i> beserta Perangkat Pembelajaran Mandiri Siklus 1–4.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Alasan Pemilihan:</b> Artefak ini menyajikan bukti empiris dan kuantitatif (melalui peningkatan nilai rata-rata kelas dan persentase ketuntasan belajar dari pra-siklus, Siklus I, hingga Siklus II pada 30 siswa subjek penelitian) bahwa intervensi pedagogis yang saya rancang berhasil memecahkan masalah nyata di lapangan.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">C. Kaitan Praktis</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Pengalaman melaksanakan PPL II dan PTK secara utuh membentuk ketangguhan mental dan kemandirian profesional saya. Saya kini memiliki metodologi kerja berbasis data (<i>data-driven instruction</i>) untuk mendiagnosis kendala belajar siswa dan merumuskan solusi inovatif kapan pun saya menemukan hambatan pembelajaran di sekolah tempat saya mengabdi nantinya.</p>
+            </div>
+
+            <!-- MATA KULIAH 5: Seminar Pendidikan Profesi Guru -->
+            <div class="box">
+                <h3 style="color: var(--primary); margin-bottom: 12px; font-size: 1.15rem;">5. Seminar Pendidikan Profesi Guru</h3>
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 10px; margin-bottom: 6px;">A. Refleksi 4C</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Connection:</b> Mata kuliah Seminar PPG merupakan muara reflektif yang mengikat seluruh kepingan pengalaman belajar saya selama dua semester menjadi satu narasi identitas profesional yang utuh. Mata kuliah ini menuntun saya untuk menengok kembali perjalanan transformasi diri—mulai dari pemahaman filosofis di Semester 1 hingga kemandirian riset tindakan kelas di Semester 2—serta merumuskan proyeksi pengembangan diri menuju guru masa depan.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Challenge:</b> Tantangan terbesarnya adalah melakukan kurasi, sintesis, dan evaluasi kritis terhadap puluhan dokumen perangkat ajar, jurnal refleksi, instrumen penilaian, inovasi aplikasi pembelajaran, dan laporan PTK, lalu mengemasnya ke dalam sebuah platform E-Portfolio digital yang tidak hanya informatif secara akademis, tetapi juga estetis, interaktif, dan mudah dinavigasi oleh penguji maupun publik.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Concept:</b> Paradigma Praktisi Reflektif (<i>Reflective Practitioner</i> - Donald Schön), Sintesis Pengalaman Belajar, Pengembangan E-Portfolio Profesional Berbasis Web, Komunikasi Ilmiah dan Presentasi Praktik Baik (<i>Best Practices</i>), serta Perencanaan Pengembangan Keprofesian Berkelanjutan (PKB).</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Change:</b> Saya tidak lagi memandang tugas kuliah dan laporan PPL sebagai beban administratif belaka, melainkan sebagai aset intelektual dan rekam jejak karya profesional. Saya mengembangkan sendiri arsitektur E-Portfolio berbasis web satu halaman (<i>Single-Page Application</i>) ini untuk mendokumentasikan artefak terbaik sekaligus mempertanggungjawabkan kompetensi saya di hadapan forum akademis.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">B. Analisis Artefak Pembelajaran</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Artefak:</b> Website E-Portfolio Digital Interaktif, Dokumen Refleksi Komprehensif (LK 1, LK 2, LK 3), serta Media Presentasi Inovasi Pembelajaran Seminar PPG.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Alasan Pemilihan:</b> Platform E-Portfolio ini sendiri adalah artefak puncak (<i>capstone artifact</i>) yang mengintegrasikan kemampuan literasi digital (pengodean HTML, CSS, JavaScript) dengan kedalaman refleksi pedagogis selama menempuh program PPG Prajabatan di Universitas PGRI Adi Buana Surabaya.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">C. Kaitan Praktis</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Keterampilan mendokumentasikan karya ke dalam E-Portfolio digital dan mempresentasikan hasil riset kelas secara ilmiah ini menjadi fondasi <i>personal branding</i> saya sebagai guru PJOK abad ke-21 yang siap berbagi praktik baik dan berkontribusi dalam ekosistem pendidikan Indonesia.</p>
+            </div>
+
+            <!-- MATA KULIAH 6: Proyek Kepemimpinan -->
+            <div class="box">
+                <h3 style="color: var(--primary); margin-bottom: 12px; font-size: 1.15rem;">6. Proyek Kepemimpinan</h3>
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 10px; margin-bottom: 6px;">A. Refleksi 4C</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Connection:</b> Peran seorang pendidik PJOK tidak berhenti di batas pagar lapangan sekolah, melainkan meluas sebagai agen perubahan dan penggerak kesehatan di tengah masyarakat (<i>community leader</i>). Mata kuliah Proyek Kepemimpinan menghubungkan kompetensi keilmuan olahraga dan kesehatan yang saya miliki dengan pengabdian nyata kepada masyarakat melalui penyelenggaraan program <b>"SEKILAS" (<i>Screening Kesehatan Lansia</i>)</b>, yang memadukan layanan pemeriksaan kesehatan dasar, edukasi kebugaran, serta senam bugar lansia.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Challenge:</b> Tantangan terbesar dalam mengeksekusi proyek ini adalah mengelola koordinasi lintas pemangku kepentingan (<i>stakeholders</i>)—mulai dari pengurus warga setempat, tenaga medis mitra, hingga penyamaan visi dan pembagian peran di antara anggota tim mahasiswa. Selain itu, memobilisasi partisipasi aktif warga lanjut usia (lansia) serta menyusun instruksi gerakan senam yang aman, bertempo rendah (<i>low-impact</i>), dan mudah diikuti oleh lansia dengan berbagai keterbatasan fisiologis menuntut kepekaan komunikasi serta manajemen risiko lapangan yang sangat matang.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Concept:</b> Konsep utama yang saya pelajari dan terapkan meliputi paradigma <i>Inkuiri Apresiatif</i> (model manajemen perubahan <b>BAGJA</b>: Buat pertanyaan, Ambil pelajaran, Gali mimpi, Jabarkan rencana, Atur eksekusi), pendekatan <i>Asset-Based Community Development</i> (ABCD) atau Pengembangan Komunitas Berbasis Aset, <i>Servant Leadership</i> (Kepemimpinan yang Melayani), serta manajemen proyek berbasis <i>Project Management Body of Knowledge</i> (perencanaan waktu, anggaran, mutu, dan mitigasi risiko).</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>• Change:</b> Pengalaman memimpin dan menyukseskan proyek SEKILAS mengubah cara pandang saya terhadap kepemimpinan pendidikan. Saya tidak lagi melihat masalah komunitas dari sudut pandang kekurangan (<i>deficit-based thinking</i>), melainkan belajar memetakan dan mengoptimalkan modal/aset kekuatan yang sudah dimiliki oleh lingkungan sekitar. Saya juga menjadi jauh lebih terampil dalam bernegosiasi, mendelegasikan tugas secara proporsional, mengambil keputusan cepat saat terjadi kendala teknis di lapangan, serta mengevaluasi dampak keberlanjutan program secara sistematis.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">B. Analisis Artefak Pembelajaran</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Artefak:</b> Proposal Perencanaan Prakarsa Perubahan Berbasis BAGJA, Laporan Akhir Pelaksanaan & Evaluasi Proyek Kepemimpinan "SEKILAS" (<i>Screening Kesehatan Lansia</i>), serta Poster/Video Dokumentasi Kegiatan Pengabdian Masyarakat.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;"><b>Alasan Pemilihan:</b> Artefak ini merupakan bukti konkret kemampuan kepemimpinan kolaboratif, manajerial, dan kepedulian sosial saya bersama tim dalam merancang program kesehatan masyarakat dari tahap ideasi hingga menghasilkan dampak positif yang terukur bagi kualitas hidup warga lansia.</p>
+
+                <h4 style="color: var(--text-main); font-size: 0.95rem; margin-top: 14px; margin-bottom: 6px;">C. Kaitan Praktis</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Kecakapan manajerial dan kepemimpinan kolaboratif dari proyek ini menjadi bekal langsung bagi saya saat bertugas di sekolah nanti, khususnya dalam mengoordinasikan kegiatan berskala besar seperti Projek Penguatan Profil Pelajar Pancasila (P5), menyelenggarakan <i>classmeeting</i> atau turnamen olahraga antarsekolah, mengelola program Usaha Kesehatan Sekolah (UKS), serta menjalin kemitraan strategis dengan puskesmas dan masyarakat sekitar sekolah.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION LK 3: REFLEKSI PENGALAMAN BELAJAR SELAMA MENGIKUTI PPG -->
+    <section id="lk3-refleksi">
+        <div class="card">
+            <h2><i data-lucide="award"></i> LEMBAR KERJA 3 (LK 3): REFLEKSI PENGALAMAN BELAJAR SELAMA MENGIKUTI PPG</h2>
+
+            <div style="background: rgba(243, 13, 13, 0.1); border-left: 4px solid var(--primary); padding: 15px; border-radius: 8px; margin-bottom: 25px;">
+                <p style="color: var(--text-main); font-weight: 600; font-size: 0.95rem;">Catatan Pengingat:</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem; font-style: italic;">Refleksi menyeluruh dan rencana tindak lanjut yang disusun di bawah ini merupakan komitmen nyata untuk terus bertumbuh sebagai pendidik profesional demi kemajuan pendidikan di tanah air.</p>
+            </div>
+
+            <div class="box">
+                <h4 style="color: var(--text-main); font-size: 1rem; margin-bottom: 8px;">A. Pandangan Mengenai Pendidikan di Indonesia Setelah Mengikuti PPG</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Setelah menempuh seluruh rangkaian program Pendidikan Profesi Guru (PPG) Prajabatan di Universitas PGRI Adi Buana Surabaya dan terjun langsung melaksanakan PPL di SMAN 15 Surabaya, cara pandang saya terhadap pendidikan di Indonesia mengalami transformasi yang sangat mendasar. Sebelumnya, saya melihat pendidikan nasional cenderung berorientasi pada penyeragaman standar akademik dan ketuntasan materi kurikulum di atas kertas. Kini, pandangan saya menjadi jauh lebih membumi, humanis, namun sekaligus visioner.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Saya meyakini bahwa pendidikan di Indonesia sejatinya harus kembali pada marwah filosofi Ki Hajar Dewantara, yakni sebagai proses "menuntun" segala kekuatan kodrat yang ada pada anak agar mereka mencapai keselamatan dan kebahagiaan setinggi-tingginya. Pendidikan tidak boleh lagi beroperasi layaknya lini produksi pabrik yang memaksa seluruh peserta didik melewati cetakan standar yang seragam. Setiap anak hadir ke sekolah membawa keunikan kodrat alam (potensi biologis, kesiapan motorik, gaya belajar, dan latar belakang sosio-kultural) serta hidup di tengah dinamika kodrat zaman yang menuntut kecakapan berpikir kritis, kolaborasi, dan literasi teknologi.</p>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Secara spesifik dalam bidang studi Pendidikan Jasmani, Olahraga, dan Kesehatan (PJOK), saya memandang bahwa PJOK bukan lagi mata pelajaran pelengkap yang hanya menguras keringat di lapangan, melainkan pilar utama pembangunan karakter bangsa. Melalui pembelajaran PJOK yang dirancang dengan kerangka <i>Understanding by Design</i> (UbD), berdiferensiasi sesuai kemampuan murid, tanggap terhadap keragaman sosiokultural (CRT), dan terintegrasi dengan Pembelajaran Sosial Emosional (PSE), lapangan olahraga berubah menjadi ruang yang inklusif dan aman secara psikologis. Pendidikan Indonesia yang ideal adalah pendidikan yang merayakan keberagaman progres setiap anak, menguatkan literasi fisik dan kesehatan mental, menumbuhkan pola pikir bertumbuh (<i>growth mindset</i>), serta menghidupkan nilai-nilai luhur Profil Pelajar Pancasila dalam tindakan nyata sehari-hari.</p>
+            </div>
+
+            <div class="box">
+                <h4 style="color: var(--text-main); font-size: 1rem; margin-bottom: 8px;">B. Upaya dan Langkah-Langkah untuk Menjadi Seorang Guru yang Profesional</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Menjadi guru profesional bukanlah sebuah status statis yang berhenti setelah memperoleh sertifikat pendidik, melainkan sebuah proses menjadi (<i>state of becoming</i>) yang menuntut dedikasi berkelanjutan. Untuk mewujudkan empat standar kompetensi guru (pedagogik, kepribadian, sosial, dan profesional) secara utuh, langkah-langkah strategis yang saya tempuh meliputi:</p>
+                <ul style="color: var(--text-muted); font-size: 0.88rem; margin-top: 8px; margin-left: 20px; line-height: 1.7; text-align: justify;">
+                    <li style="margin-bottom: 8px;"><b>Menjadi Praktisi yang Reflektif dan Berbasis Riset (<i>Reflective & Research-Based Practitioner</i>):</b> Membudayakan evaluasi diri secara jujur setiap selesai memfasilitasi pembelajaran di lapangan, mendengarkan suara serta umpan balik dari peserta didik, dan secara berkala melaksanakan Penelitian Tindakan Kelas (PTK) guna memecahkan permasalahan pembelajaran dengan solusi pedagogis yang teruji secara ilmiah.</li>
+                    <li style="margin-bottom: 8px;"><b>Menghidupi Semangat Belajar Sepanjang Hayat dan Inovasi Teknologi (<i>Lifelong Learner & Tech-Innovator</i>):</b> Terus memperbarui khazanah keilmuan terkait perkembangan kurikulum nasional, biomekanika olahraga, serta metodologi pengajaran modern (seperti TGfU, TaRL, CRT, dan <i>Deep Learning</i>). Saya juga berkomitmen melanjutkan pengembangan media pembelajaran digital mandiri—seperti aplikasi web edukasi olahraga interaktif dan sistem E-LKPD terotomatisasi—agar pembelajaran PJOK selalu relevan dengan dunia digital peserta didik.</li>
+                    <li style="margin-bottom: 8px;"><b>Menciptakan Ekosistem Pembelajaran yang Berpihak pada Murid dan Inklusif:</b> Merancang pembelajaran yang diawali dari pemetaan diagnostik, menerapkan modifikasi alat dan aturan permainan (diferensiasi proses dan konten) agar tidak ada satu pun siswa yang tertinggal atau terpinggirkan karena keterbatasan fisik maupun latar belakang sosiokultural, serta menjaga keselamatan kerja dan keamanan emosional siswa di lapangan.</li>
+                    <li style="margin-bottom: 8px;"><b>Menguatkan Integritas Kepribadian dan Kepemimpinan Sosial:</b> Menjadi teladan nyata (<i>role model</i>) dalam menerapkan gaya hidup sehat, kedisiplinan, sportivitas, dan kematangan emosi di lingkungan sekolah, sekaligus menggerakkan program-program kolaboratif yang berdampak positif bagi rekan sejawat, pimpinan sekolah, orang tua wali murid, serta masyarakat sekitar.</li>
+                </ul>
+            </div>
+
+            <div class="box">
+                <h4 style="color: var(--text-main); font-size: 1rem; margin-bottom: 8px;">C. Rencana Tindak Lanjut (RTL) Saat Memulai Karier sebagai Guru Profesional</h4>
+                <p style="color: var(--text-muted); font-size: 0.88rem;">Ketika secara resmi mengemban amanah dan memulai karier sebagai guru PJOK profesional di satuan pendidikan nanti, terdapat tiga program tindak lanjut konkret yang akan segera saya laksanakan secara bertahap dan terukur:</p>
+                <ol style="color: var(--text-muted); font-size: 0.88rem; margin-top: 8px; margin-left: 20px; line-height: 1.7; text-align: justify;">
+                    <li style="margin-bottom: 10px;"><b>Pelaksanaan Asesmen Diagnostik Holistik dan Perancangan Kurikulum Kelas Berbasis UbD (Jangka Pendek - Awal Semester):</b> Pada minggu pertama tahun ajaran baru, saya akan melakukan pemetaan komprehensif yang mencakup kesiapan fisik/motorik dasar, profil kesehatan/riwayat cedera, gaya belajar, latar belakang sosiokultural, serta kondisi sosial-emosional siswa. Data autentik ini akan saya gunakan sebagai fondasi untuk menyusun Modul Ajar berbasis <i>Understanding by Design</i> (UbD) dan matriks diferensiasi permainan, sehingga sejak pertemuan pertama setiap siswa mendapatkan porsi tantangan gerak yang tepat dan bermakna.</li>
+                    <li style="margin-bottom: 10px;"><b>Pengembangan Ekosistem Pembelajaran PJOK Digital dan Integrasi PSE-Growth Mindset (Jangka Menengah - Selama Semester Berjalan):</b> Saya akan mengimplementasikan media aplikasi web pembelajaran interaktif dan E-LKPD digital yang telah saya rintis selama PPG untuk mendukung model <i>blended/flipped learning</i> di sekolah. Bersamaan dengan itu, saya akan membakukan rutinitas Pembelajaran Sosial Emosional (seperti <i>mindfulness cooling down</i>, teknik STOP, dan <i>process praise</i>) di setiap sesi praktik lapangan guna menumbuhkan budaya kolaborasi yang suportif, sportivitas tinggi, dan mentalitas pantang menyerah pada diri siswa.</li>
+                    <li style="margin-bottom: 10px;"><b>Kontribusi Aktif dalam Komunitas Belajar (MGMP PJOK) dan Kepemimpinan Program Kesehatan Sekolah/Masyarakat (Jangka Panjang - Berkelanjutan):</b> Saya berkomitmen untuk terlibat aktif dalam Komunitas Belajar di dalam sekolah maupun forum Musyawarah Guru Mata Pelajaran (MGMP) PJOK tingkat daerah. Melalui wadah tersebut, saya akan mendiseminasikan praktik baik (<i>best practices</i>), berbagi inovasi pembuatan media web pembelajaran sederhana bagi rekan-rekan guru, berkolaborasi dalam penulisan publikasi jurnal Penelitian Tindakan Kelas.</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+
+</div>
+
+<!-- Footer disembunyikan secara bawaan dengan script agar tidak ada ruang sisa untuk di-scroll saat di Beranda -->
+<footer id="main-footer" class="hidden" style="text-align: center; padding: 40px; color: var(--text-muted); font-size: 0.8rem;">
+    © 2026 Nurmansyah Ubaidillah, S.Pd. Dibuat Untuk Tugas Akhir Seminar PPG Prajabatan Universitas PGRI Adi Buana Surabaya.
+</footer>
+
+<script>
+    // Initialize Icons
+    lucide.createIcons();
+
+    const menuToggle = document.getElementById('mobile-menu');
+    const navLinksContainer = document.getElementById('nav-links');
+    const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+    const navLinksList = document.querySelectorAll('.nav-links a:not(.dropdown-toggle)');
+    
+    // Theme Switcher Config
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    updateThemeIcon(currentTheme);
+
+    themeToggleBtn.addEventListener('click', () => {
+        let theme = document.documentElement.getAttribute('data-theme');
+        if (theme === 'dark') {
+            theme = 'light';
+        } else {
+            theme = 'dark';
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        updateThemeIcon(theme);
+    });
+
+    function updateThemeIcon(theme) {
+        if (theme === 'light') {
+            themeIcon.setAttribute('data-lucide', 'moon');
+        } else {
+            themeIcon.setAttribute('data-lucide', 'sun');
+        }
+        lucide.createIcons();
+    }
+
+    // FUNGSI EKSPOR SELURUH DOKUMEN PORTOFOLIO KE PDF (PRINT-TO-PDF)
+    function exportPortfolioToPDF() {
+        const beranda = document.getElementById('beranda');
+        const container = document.querySelector('.container');
+        const footer = document.getElementById('main-footer');
+        const allSections = document.querySelectorAll('.container section');
+
+        // Simpan state halaman aktif sebelum dicetak
+        const wasBerandaHidden = beranda.classList.contains('hidden');
+        const wasContainerHidden = container.classList.contains('hidden');
+        const activeSectionIds = [];
+        allSections.forEach(sec => {
+            if (!sec.classList.contains('hidden')) {
+                activeSectionIds.push(sec.id);
+            }
+        });
+
+        // Tampilkan seluruh section agar semua LK & Profil terekspor ke PDF secara utuh
+        beranda.classList.remove('hidden');
+        container.classList.remove('hidden');
+        footer.classList.remove('hidden');
+        allSections.forEach(sec => sec.classList.remove('hidden'));
+
+        // Beri jeda singkat 150ms agar browser selesai merender seluruh DOM sebelum dialog PDF muncul
+        setTimeout(() => {
+            window.print();
+
+            // Kembalikan tampilan ke halaman semula setelah dialog cetak ditutup
+            if (wasBerandaHidden) {
+                beranda.classList.add('hidden');
+            }
+            if (wasContainerHidden) {
+                container.classList.add('hidden');
+                footer.classList.add('hidden');
+            }
+            allSections.forEach(sec => {
+                if (!activeSectionIds.includes(sec.id)) {
+                    sec.classList.add('hidden');
+                }
+            });
+        }, 150);
+    }
+
+    // 1. Hamburger Open/Close (Mobile)
+    menuToggle.addEventListener('click', function() {
+        navLinksContainer.classList.toggle('aktif');
+        menuToggle.classList.toggle('is-active');
+    });
+
+    // 2. Accordion Click Dropdown (Mobile)
+    dropdownToggles.forEach(toggle => {
+        toggle.addEventListener('click', function(e) {
+            if (window.innerWidth <= 992) {
+                e.preventDefault();
+                const subMenu = this.nextElementSibling;
+                subMenu.classList.toggle('buka');
+                
+                const panah = this.querySelector('.panah');
+                if (subMenu.classList.contains('buka')) {
+                    panah.style.transform = 'rotate(180deg)';
+                } else {
+                    panah.style.transform = 'rotate(0deg)';
+                }
+            }
+        });
+    });
+
+    // 3. LOGIKA TAB / SINGLE PAGE APPLICATION (Baru)
+    const beranda = document.getElementById('beranda');
+    const container = document.querySelector('.container');
+    const allSections = document.querySelectorAll('.container section');
+    const footer = document.getElementById('main-footer');
+
+    // Fungsi untuk mengganti halaman
+    function switchSection(targetId) {
+        if (targetId === 'beranda') {
+            // Tampilkan hanya beranda (hilangkan footer & materi agar 100vh)
+            beranda.classList.remove('hidden');
+            beranda.classList.add('fade-in');
+            
+            container.classList.add('hidden');
+            footer.classList.add('hidden'); 
+        } else {
+            // Sembunyikan beranda, tampilkan Container dan Footer
+            beranda.classList.add('hidden');
+            
+            container.classList.remove('hidden');
+            footer.classList.remove('hidden');
+            
+            // Loop semua section di dalam container, tampilkan yang cocok
+            allSections.forEach(sec => {
+                if (sec.id === targetId) {
+                    sec.classList.remove('hidden');
+                    sec.classList.add('fade-in');
+                } else {
+                    sec.classList.add('hidden');
+                    sec.classList.remove('fade-in');
+                }
+            });
+        }
+    }
+
+    // Menangani aksi saat link navigasi di-klik
+    navLinksList.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const targetHref = this.getAttribute('href');
+            
+            if (targetHref && targetHref.startsWith('#')) {
+                e.preventDefault();
+                const targetId = targetHref.substring(1);
+                
+                // Panggil fungsi ganti halaman
+                switchSection(targetId);
+                
+                // Ubah status tombol navigasi aktif
+                navLinksList.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+
+                // Tutup menu ponsel jika dalam mode mobile
+                if (window.innerWidth <= 992) {
+                    navLinksContainer.classList.remove('aktif');
+                    menuToggle.classList.remove('is-active');
+                    
+                    document.querySelectorAll('.sub-menu').forEach(sub => sub.classList.remove('buka'));
+                    document.querySelectorAll('.panah').forEach(p => p.style.transform = 'rotate(0deg)');
+                }
+                
+                // Gulir kembali ke puncak halaman
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
